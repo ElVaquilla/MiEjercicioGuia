@@ -28,22 +28,7 @@ namespace WindowsFormsApplication1
    
         private void button2_Click(object sender, EventArgs e)
         {
-
-            //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
-            //al que deseamos conectarnos
-            IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9050);
-
-
-            //Creamos el socket 
-            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            try
-            {
-                server.Connect(ipep);//Intentamos conectar el socket
-                this.BackColor = Color.Green;
-             
-
-                if (Longitud.Checked)
+               if (Longitud.Checked)
                 {
                     // Quiere saber la longitud
                     string mensaje = "1/" + nombre.Text;
@@ -84,27 +69,38 @@ namespace WindowsFormsApplication1
                 this.BackColor = Color.Gray;
                 server.Shutdown(SocketShutdown.Both);
                 server.Close();
-
-
-
-            }
-            catch (SocketException )
-            {
-                //Si hay excepcion imprimimos error y salimos del programa con return 
-                MessageBox.Show("No he podido conectar con el servidor");
-                return;
-            } 
-
-          
-
-    
-          
-          
-
         }
 
-   
+        private void button1_Click(object sender, EventArgs e)
+        {
+            IPAddress direc = IPAddress.Parse("192.168.56.182");
+            IPEndPoint ipep = new IPEndPoint(direc, 9000);
 
-     
+            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                server.Connect(ipep);
+                this.BackColor = Color.Green;
+                MessageBox.Show("Conectado");
+            }
+            catch (SocketException) 
+            {
+                MessageBox.Show("No he podido conectar con el servidor");
+                return;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string mensaje = "0/";
+
+
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
+            this.BackColor = Color.Gray;
+            server.Shutdown(SocketShutdown.Both);
+            server.Close();
+        }
     }
 }
